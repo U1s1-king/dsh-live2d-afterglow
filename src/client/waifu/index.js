@@ -39,22 +39,22 @@ function createHooks() {
 
 async function loadWidget(hooks) {
     document.body.insertAdjacentHTML("beforeend", `
-    <div id="waifu">
-      <canvas id="live2d" width="800" height="800"></canvas>
-      <div id="waifu-tips"></div>
-      <div id="waifu-tool"></div>
+    <div id="waifu-afterglow">
+      <canvas id="live2d-afterglow" width="800" height="800"></canvas>
+      <div id="waifu-tips-afterglow"></div>
+      <div id="waifu-tool-afterglow"></div>
     </div>
-    <div id="model-selection-panel" class="waifu-panel" style="display: none;"></div>
-    <div id="texture-selection-panel" class="waifu-panel" style="display: none;"></div>`);
+    <div id="model-selection-panel-afterglow" class="waifu-panel waifu-panel-afterglow" style="display: none;"></div>
+    <div id="texture-selection-panel-afterglow" class="waifu-panel waifu-panel-afterglow" style="display: none;"></div>`);
 
     const model = new Model();
-    localStorage.removeItem("waifu-display");
-    sessionStorage.removeItem("waifu-text");
+    localStorage.removeItem("afterglow-waifu-display");
+    sessionStorage.removeItem("afterglow-waifu-text");
 
-    const waifu = document.getElementById("waifu");
-    const toolBar = document.getElementById("waifu-tool");
-    const modelPanel = document.getElementById("model-selection-panel");
-    const texturePanel = document.getElementById("texture-selection-panel");
+    const waifu = document.getElementById("waifu-afterglow");
+    const toolBar = document.getElementById("waifu-tool-afterglow");
+    const modelPanel = document.getElementById("model-selection-panel-afterglow");
+    const texturePanel = document.getElementById("texture-selection-panel-afterglow");
     let selectedModelIndex = null;
 
     // 面板滚动防抢：capture 阶段拦截 wheel 事件，阻止冒泡到 dsh GUI 的滚动处理层；
@@ -117,8 +117,8 @@ async function loadWidget(hooks) {
         if (!tools[tool]) continue;
         const { icon, callback } = tools[tool];
         toolBar.insertAdjacentHTML("beforeend",
-            `<span id="waifu-tool-${tool}" title="${TOOL_TITLES[tool] || tool}">${decodeURIComponent(icon).replace("data:image/svg+xml,", "")}</span>`);
-        document.getElementById(`waifu-tool-${tool}`).addEventListener("click", callback);
+            `<span id="waifu-tool-afterglow-${tool}" title="${TOOL_TITLES[tool] || tool}">${decodeURIComponent(icon).replace("data:image/svg+xml,", "")}</span>`);
+        document.getElementById(`waifu-tool-afterglow-${tool}`).addEventListener("click", callback);
     }
 
     /* ---------- 角色选择面板 ---------- */
@@ -199,10 +199,10 @@ async function loadWidget(hooks) {
 
     /* ---------- 点击空白处关闭面板 ---------- */
     hooks.on(document, "click", event => {
-        if (event.target.closest("#model-selection-panel") ||
-            event.target.closest("#texture-selection-panel") ||
-            event.target.closest("#waifu-tool") ||
-            event.target.closest("#waifu-toggle")) {
+        if (event.target.closest("#model-selection-panel-afterglow") ||
+            event.target.closest("#texture-selection-panel-afterglow") ||
+            event.target.closest("#waifu-tool-afterglow") ||
+            event.target.closest("#waifu-toggle-afterglow")) {
             return;
         }
         closePanels();
@@ -256,9 +256,9 @@ function enableDrag(widgetEl) {
     const drag = { active: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0 };
 
     widgetEl.addEventListener("pointerdown", event => {
-        if (event.target.closest("#waifu-tool") ||
-            event.target.closest(".waifu-panel") ||
-            event.target.closest("#waifu-toggle")) {
+        if (event.target.closest("#waifu-tool-afterglow") ||
+            event.target.closest(".waifu-panel-afterglow") ||
+            event.target.closest("#waifu-toggle-afterglow")) {
             return;
         }
         drag.active = true;
@@ -293,7 +293,7 @@ function enableDrag(widgetEl) {
         if (drag.moved) {
             const rect = widgetEl.getBoundingClientRect();
             try {
-                localStorage.setItem("waifu-pos", JSON.stringify({ left: rect.left, top: rect.top }));
+                localStorage.setItem("afterglow-waifu-pos", JSON.stringify({ left: rect.left, top: rect.top }));
             } catch (error) { /* 忽略 */ }
         }
     };
@@ -305,7 +305,7 @@ function enableDrag(widgetEl) {
 
 function restorePosition(widgetEl) {
     try {
-        const pos = JSON.parse(localStorage.getItem("waifu-pos"));
+        const pos = JSON.parse(localStorage.getItem("afterglow-waifu-pos"));
         if (!pos || typeof pos.left !== "number" || typeof pos.top !== "number") return;
         const left = Math.min(Math.max(pos.left, -120), window.innerWidth - 40);
         const top = Math.min(Math.max(pos.top, -80), window.innerHeight - 40);
@@ -354,7 +354,7 @@ function registerEventListener(model, drag, hooks) {
     }, 1000);
 
     hooks.on(window, "mouseover", event => {
-        if (event.target.closest("#live2d")) {
+        if (event.target.closest("#live2d-afterglow")) {
             showMessage(model, getMessageArray(), 4000, 9);
             return;
         }
@@ -368,7 +368,7 @@ function registerEventListener(model, drag, hooks) {
     });
     hooks.on(window, "click", event => {
         if (drag.moved) return;
-        if (event.target.closest("#live2d")) {
+        if (event.target.closest("#live2d-afterglow")) {
             showMessage(model, getMessageArray(), 4000, 9);
             return;
         }
@@ -403,10 +403,10 @@ function registerEventListener(model, drag, hooks) {
 async function initWidget(config) {
     const hooks = createHooks();
     setConfig(config);
-    document.getElementById("waifu-toggle")?.remove();
-    document.getElementById("waifu")?.remove();
-    document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle"><span>Live2D</span></div>`);
-    const toggle = document.getElementById("waifu-toggle");
+    document.getElementById("waifu-toggle-afterglow")?.remove();
+    document.getElementById("waifu-afterglow")?.remove();
+    document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle-afterglow"><span>Live2D</span></div>`);
+    const toggle = document.getElementById("waifu-toggle-afterglow");
     let stopWidget = () => { };
     const toggleStop = () => {
         hooks.stop();
@@ -419,15 +419,15 @@ async function initWidget(config) {
             stopWidget = await loadWidget(hooks);
             toggle.removeAttribute("first-time");
         } else {
-            localStorage.removeItem("waifu-display");
-            const waifuEl = document.getElementById("waifu");
+            localStorage.removeItem("afterglow-waifu-display");
+            const waifuEl = document.getElementById("waifu-afterglow");
             if (waifuEl) {
                 waifuEl.style.display = "";
                 setTimeout(() => { waifuEl.style.bottom = "20px"; }, 0);
             }
         }
     });
-    if (localStorage.getItem("waifu-display") && Date.now() - localStorage.getItem("waifu-display") <= 86400000) {
+    if (localStorage.getItem("afterglow-waifu-display") && Date.now() - localStorage.getItem("afterglow-waifu-display") <= 86400000) {
         toggle.setAttribute("first-time", true);
         setTimeout(() => {
             toggle.classList.add("waifu-toggle-active");

@@ -105,7 +105,7 @@ const tips = {
   },
   "mouseover": [
     {
-      "selector": "#waifu-tool-switch-model",
+      "selector": "#waifu-tool-afterglow-switch-model",
       "text": [
         { "text": "换人？……哼，随你。", "motion": "nod02" },
         { "text": "要换吗～摩卡会想你的～", "motion": "smile01" },
@@ -115,7 +115,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-photo",
+      "selector": "#waifu-tool-afterglow-photo",
       "text": [
         { "text": "拍照？……别拍奇怪的角度。", "motion": "serious01" },
         { "text": "拍照～摩卡要摆个可爱的姿势～", "motion": "wink01" },
@@ -125,7 +125,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-info",
+      "selector": "#waifu-tool-afterglow-info",
       "text": [
         { "text": "想知道 Afterglow 的事？哼，说说也无妨。", "motion": "smile01" },
         { "text": "关于摩卡的事～是秘密哦～", "motion": "wink01" },
@@ -135,7 +135,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-quit",
+      "selector": "#waifu-tool-afterglow-quit",
       "text": [
         { "text": "要走了？……嗯，下次见。", "motion": "nod01" },
         { "text": "要走了吗～摩卡会寂寞的～", "motion": "sad01" },
